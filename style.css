@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles if needed */
+body {
+    overflow-x: hidden; /* Prevent horizontal scroll */
+    background-color: #f0f0f0; /* Example background */
+}
+
+/* Style for the fixed right side */
+.sticky-right {
+    position: sticky;
+    top: 0;
+    height: 100vh; /* Ensure it takes full viewport height */
+}
+
+/* Style for scrollable left side */
+.scrollable-left {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+/* Basic card styling */
+.project-card {
+    min-height: 70vh; /* Ensure cards are reasonably tall */
+    margin-bottom: 20vh; /* Space between cards */
+}
+
+/* Responsive adjustments can go here */
+@media (max-width: 768px) {
+    .sticky-right {
+        position: relative; /* Unstick on mobile */
+        height: 50vh; /* Adjust height */
+        order: 1; /* Move below cards */
+    }
+    .scrollable-left {
+        height: auto; /* Adjust height */
+        order: 2; /* Move above canvas */
+    }
+    .project-card {
+        min-height: 50vh;
+        margin-bottom: 10vh;
+    }
+    .main-container {
+        flex-direction: column;
+    }
+} 

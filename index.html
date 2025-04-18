@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Project Showcase</title>
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Cinzel -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Add a little extra CSS for smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Hide scrollbar for cleaner look, but allow scrolling */
+        .scrollable-left::-webkit-scrollbar {
+            display: none;
+            /* Safari and Chrome */
+        }
+
+        .scrollable-left {
+            -ms-overflow-style: none;
+            /* IE and Edge */
+            scrollbar-width: none;
+            /* Firefox */
+        }
+
+        /* Enhanced Glassmorphism styles */
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .glass-tag {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        /* Aesthetic gradient background with glassmorphism overlay */
+        body {
+            background: #000000;
+            /* Pure black background */
+            min-height: 100vh;
+            position: relative;
+            font-family: 'Cinzel', serif;
+            overflow-y: auto;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.03);
+            /* Very subtle overlay */
+            backdrop-filter: blur(30px);
+            /* Reduced blur for better performance */
+            -webkit-backdrop-filter: blur(30px);
+            z-index: 0;
+        }
+
+        #project-showcase {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+
+        .glass-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Project card specific styles - Optimized for performance */
+        .project-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            min-height: 320px;
+            will-change: transform, opacity;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+        }
+
+        .project-image {
+            height: 30%;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .project-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .project-content {
+            height: 70%;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Enhanced text styles */
+        .project-content h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 0.75rem;
+            letter-spacing: 0.025em;
+        }
+
+        .project-content p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            margin-bottom: 1rem;
+        }
+
+        .glass-tag {
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.8rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            transition: all 0.2s ease;
+        }
+
+        .glass-tag:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* Mobile responsive adjustments */
+        @media (max-width: 768px) {
+            .project-card {
+                min-height: 280px;
+            }
+
+            .project-image {
+                height: 35%;
+            }
+
+            .project-content {
+                height: 65%;
+                padding: 1.25rem;
+            }
+
+            .project-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .project-content p {
+                font-size: 0.875rem;
+            }
+
+            .glass-tag {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+
+        /* Animation keyframes */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* Staggered animation delays */
+        .project-card:nth-child(1) .animate-fade-in { animation-delay: 0.1s; }
+        .project-card:nth-child(2) .animate-fade-in { animation-delay: 0.2s; }
+        .project-card:nth-child(3) .animate-fade-in { animation-delay: 0.3s; }
+        .project-card:nth-child(4) .animate-fade-in { animation-delay: 0.4s; }
+
+        /* Sticky right side */
+        .sticky-right {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background: transparent !important;
+        }
+
+        /* Projects container */
+        .projects-container {
+            padding-bottom: 4rem;
+        }
+
+        /* Finisher Header Background */
+        .finisher-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Glassmorphism styles */
+        .glass {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .glass-tag {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Project card styles */
+        .project-card {
+            transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Ensure 3D model has transparent background */
+        #laptop-canvas {
+            background: transparent !important;
+        }
+
+        /* Improved animation classes with better performance */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+            /* Faster animation */
+            will-change: opacity;
+            /* Optimize for animations */
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.4s ease-out forwards;
+            /* Faster animation */
+            will-change: transform, opacity;
+            /* Optimize for animations */
+        }
+
+        /* Make tags more compact */
+        .glass-tag {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+        }
+
+        /* Fix for black background issue */
+        canvas {
+            background: transparent !important;
+        }
+
+        .sticky-right {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+        }
+
+        /* Responsive adjustments for mobile */
+        @media (max-width: 768px) {
+            .sticky-right {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .w-full.md\:w-1/2 {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .project-card {
+                margin-bottom: 1.5rem;
+            }
+        }
+
+        /* Image animation styles */
+        .project-image {
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .project-image img {
+            transition: transform 0.5s ease;
+        }
+
+        .project-image.expanding {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .project-image.expanding img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body class="text-gray-100">
+    <div class="glass-overlay"></div>
+
+    <!-- Finisher Header Background -->
+    <div class="header finisher-header"></div>
+
+    <!-- Loading indicator - Removed as requested -->
+    <!-- <div id="loading-indicator" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="text-2xl">Loading...</div>
+    </div> -->
+
+    <section id="project-showcase" class="min-h-screen flex flex-col md:flex-row">
+        <!-- Left Side: Project Cards -->
+        <div class="w-full md:w-1/2 p-8 space-y-8 overflow-y-auto">
+            <!-- Project Card 1 -->
+            <div class="project-card glass-card rounded-xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+                <a href="https://gooey-effect.vercel.app/" class="block">
+                    <div class="project-image overflow-hidden animate-scale-in">
+                        <img src="p-2.webp" alt="Gooey Effect Project" class="w-full h-full object-cover">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="text-2xl font-bold mb-2 text-white/95 animate-fade-in">Gooey Effect</h3>
+                        <p class="text-white/85 mb-4 animate-fade-in">An interactive website featuring a trendy gooey effect showcasing various products with smooth animations and transitions.</p>
+                        <div class="flex flex-wrap gap-2 mb-4 animate-fade-in">
+                            <span class="glass-tag">HTML</span>
+                            <span class="glass-tag">CSS</span>
+                            <span class="glass-tag">JavaScript</span>
+                        </div>
+                        <div class="text-white/90 hover:text-white flex items-center gap-2 group animate-fade-in">
+                            View Project
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Project Card 2 -->
+            <div class="project-card glass-card rounded-xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+                <a href="https://halloween-two-rho.vercel.app/" class="block">
+                    <div class="project-image overflow-hidden animate-scale-in">
+                        <img src="p-3.webp" alt="Halloween Project" class="w-full h-full object-cover">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="text-2xl font-bold mb-2 text-white/95 animate-fade-in">Halloween Special</h3>
+                        <p class="text-white/85 mb-4 animate-fade-in">A spooky Halloween-themed website with interactive elements and animations. Perfect for the trick-or-treat season!</p>
+                        <div class="flex flex-wrap gap-2 mb-4 animate-fade-in">
+                            <span class="glass-tag">HTML</span>
+                            <span class="glass-tag">CSS</span>
+                            <span class="glass-tag">JavaScript</span>
+                        </div>
+                        <div class="text-white/90 hover:text-white flex items-center gap-2 group animate-fade-in">
+                            View Project
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Project Card 3 -->
+            <div class="project-card glass-card rounded-xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+                <a href="https://holi-parallax-by-nvs.vercel.app/" class="block">
+                    <div class="project-image overflow-hidden animate-scale-in">
+                        <img src="p-1.webp" alt="Holi Parallax Project" class="w-full h-full object-cover">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="text-2xl font-bold mb-2 text-white/95 animate-fade-in">Holi Parallax</h3>
+                        <p class="text-white/85 mb-4 animate-fade-in">A beautiful parallax scrolling effect website showcasing the Holi festival. Built with HTML, CSS, and JavaScript using DOM manipulation.</p>
+                        <div class="flex flex-wrap gap-2 mb-4 animate-fade-in">
+                            <span class="glass-tag">HTML</span>
+                            <span class="glass-tag">CSS</span>
+                            <span class="glass-tag">JavaScript</span>
+                        </div>
+                        <div class="text-white/90 hover:text-white flex items-center gap-2 group animate-fade-in">
+                            View Project
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Project Card 4 -->
+            <!-- <div class="project-card glass-card rounded-xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+                <a href="https://huuman.vercel.app/" class="block">
+                    <div class="project-image overflow-hidden animate-scale-in">
+                        <img src="p-4.webp" alt="Huuman Project" class="w-full h-full object-cover">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="text-2xl font-bold mb-2 text-white/95 animate-fade-in">Huuman</h3>
+                        <p class="text-white/85 mb-4 animate-fade-in">An urban fashion e-commerce platform showcasing trendy tees and street style. Features a modern design with smooth animations.</p>
+                        <div class="flex flex-wrap gap-2 mb-4 animate-fade-in">
+                            <span class="glass-tag">HTML</span>
+                            <span class="glass-tag">CSS</span>
+                            <span class="glass-tag">JavaScript</span>
+                        </div>
+                        <div class="text-white/90 hover:text-white flex items-center gap-2 group animate-fade-in">
+                            View Project
+                            <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </a>
+            </div> -->
+
+            <!-- Project Card 5 (Commented out) -->
+            <!--
+            <div class="project-card glass-card rounded-xl overflow-hidden transform transition-all duration-500 hover:scale-[1.02]">
+                <div class="project-image overflow-hidden">
+                    <img src="p-1.png" alt="Project 5" class="w-full h-full object-cover">
+                </div>
+                <div class="project-content">
+                    <h3 class="text-2xl font-bold mb-2 text-white/90 animate-fade-in">Project 5</h3>
+                    <p class="text-white/70 mb-4 animate-slide-up">Description of project 5. This is a brief overview of what the project does and its main features.</p>
+                    <div class="flex flex-wrap gap-2 mb-4 animate-fade-in">
+                        <span class="glass-tag px-3 py-1 rounded-full text-sm text-white/80">Next.js</span>
+                        <span class="glass-tag px-3 py-1 rounded-full text-sm text-white/80">GraphQL</span>
+                        <span class="glass-tag px-3 py-1 rounded-full text-sm text-white/80">Firebase</span>
+                    </div>
+                    <a href="#" class="text-white/90 hover:text-white flex items-center gap-2 group animate-slide-up">
+                        View Project
+                        <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            -->
+        </div>
+
+        <!-- Right Side: Sticky 3D Model -->
+        <div class="hidden md:block w-1/2 sticky-right">
+            <canvas id="laptop-canvas" class="w-full h-full"></canvas>
+        </div>
+
+    </section>
+
+    <!-- GSAP Core and ScrollTrigger Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Three.js Core -->
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.158.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.158.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <!-- Your Custom Script -->
+    <script type="module" src="script.js"></script>
+
+    <!-- Finisher Header Script -->
+    <script src="finisher-header.es5.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        new FinisherHeader({
+            "count": 12,
+            "size": {
+                "min": 1300,
+                "max": 1500,
+                "pulse": 0
+            },
+            "speed": {
+                "x": {
+                    "min": 0.6,
+                    "max": 3
+                },
+                "y": {
+                    "min": 0.6,
+                    "max": 3
+                }
+            },
+            "colors": {
+                "background": "#000000",
+                "particles": [
+                    "#111111",
+                    "#222222",
+                    "#333333",
+                    "#444444"
+                ]
+            },
+            "blending": "lighten",
+            "opacity": {
+                "center": 0.2,
+                "edge": 0
+            },
+            "skew": -2,
+            "shapes": [
+                "c"
+            ]
+        });
+    </script>
+
+</body>
+
+</html>
